@@ -2,7 +2,6 @@ import express from "express";
 import mysql from "mysql";
 import cors from "cors";
 import http from "http";
-import { error } from "console";
 
 
 
@@ -30,7 +29,7 @@ const connection = mysql.createConnection({
     user : "kesavan",
     password : "Kesavan@5",
     database : "travelixapp",
-    port : "3306"
+    port : 3306
 
 })
 
@@ -42,10 +41,10 @@ else{
     console.log("mysql has been connected successfully");
 }
 })
-// http://localhost:4000/add/destination;
+//http://localhost:4000/add/destination;
 app.post("/add/destination",(request,response)=>{
 const form = request.body;
-const sqlQuery = `insert into destinationList (destinationPlace,destinationCount,destinationImage)values('${form.destinationPlace}','${form.destinationCount}','${form.destinationImage}')` ;
+const sqlQuery = `insert into destinationList (destinationName,destinationCount,destinationImage)values('${form.destinationName}','${form.destinationCount}','${form.destinationImage}')` ;
 
 
 connection.query(sqlQuery,(error,result)=>{
@@ -54,7 +53,7 @@ if (error){
 }
 else{
     response.status(200).send({
-        message:"destination has been created"
+        message:"destination has been created successfully"
         
     })
 }
@@ -62,18 +61,18 @@ else{
 
 });
 
-// http://localhost:4000/list/destination;
+//http://localhost:4000/list/destination;
 app.get("/list/destination",(request,response)=>{
 
-const destinationPlace = request.query.destinationPlace;
+const destinationName = request.query.destinationName;
 
 let sqlQuery = "";
 
-if(destinationPlace==undefined){
+if(destinationName==undefined){
     sqlQuery=`select * from destinationList`;
 }
 else{
-    sqlQuery =`select * from destinationList where destinationPlace='${destinationPlace}'`;
+    sqlQuery =`select * from destinationList where destinationName='${destinationName}'`;
 }
 
 
@@ -89,7 +88,7 @@ response.status(200).send(result)
 })
     }
 )
-// http://localhost:4000/delete/destination/1;
+//http://localhost:4000/delete/destination/1;
 app.delete("/delete/destination/:id",(request,response)=>{
     const uniqueId = request.params.id;
     const sqlQuery =`delete from destinationList where id =${uniqueId}`;
@@ -108,7 +107,7 @@ app.delete("/delete/destination/:id",(request,response)=>{
 
 })
 
-// http://localhost:4000/add/hotel;
+//http://localhost:4000/add/hotel;
 app.post("/add/hotel",(request,response)=>{
     const form = request.body;
     const sqlQuery = `insert into hotelList (hotelName,hotelLocation,hotelPrice,hotelImage)values('${form.hotelName}','${form.hotelLocation}','${form.hotelPrice}','${form.hotelImage}')` ;
@@ -127,18 +126,18 @@ app.post("/add/hotel",(request,response)=>{
     })
     
     });
-    // http://localhost:4000/list/hotel;
+    //http://localhost:4000/list/hotel?hotelLocation=;
 app.get("/list/hotel",(request,response)=>{
 
-    const hotelName = request.query.hotelName;
+    const hotelLocation = request.query.hotelLocation;
     
     let sqlQuery = "";
     
-    if(hotelName==undefined){
+    if(hotelLocation==undefined){
         sqlQuery=`select * from hotelList`;
     }
     else{
-        sqlQuery =`select * from hotelList where hotelName='${hotelName}'`;
+        sqlQuery =`select * from hotelList where hotelLocation='${hotelLocation}'`;
     }
 connection.query(sqlQuery,(error,result)=>{
         if(error){
@@ -152,7 +151,7 @@ connection.query(sqlQuery,(error,result)=>{
         }
     )
 
-    // http://localhost:4000/delete/hotel/1;
+    //http://localhost:4000/delete/hotel/1;
 app.delete("/delete/hotel/:id",(request,response)=>{
     const uniqueId = request.params.id;
     const sqlQuery =`delete from hotelList where id =${uniqueId}`;
